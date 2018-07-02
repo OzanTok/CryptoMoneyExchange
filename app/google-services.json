@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "165673397509",
+    "firebase_url": "https://cryptomoney-8ad5b.firebaseio.com",
+    "project_id": "cryptomoney-8ad5b",
+    "storage_bucket": "cryptomoney-8ad5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165673397509:android:a43e3dda677b75d9",
+        "android_client_info": {
+          "package_name": "com.ozantok3.cryptomoney"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "165673397509-vfgrrbmch315kv59u0hnah72f0f265j6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ozantok3.cryptomoney",
+            "certificate_hash": "13138b3579a27cbdc637a6371a98c8154fca81a5"
+          }
+        },
+        {
+          "client_id": "165673397509-kphvcc111klpgosjkuehhlolqvu8s3i2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALU-TovdmDkrsYx4xzUCw5WoykCefxtyY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "165673397509-kphvcc111klpgosjkuehhlolqvu8s3i2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
