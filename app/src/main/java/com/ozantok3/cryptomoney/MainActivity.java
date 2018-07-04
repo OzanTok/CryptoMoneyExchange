@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,31 +14,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView recyclerView;
-    private MyAdapter adapter;
-    private List<CryptoFragment> listItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -50,12 +32,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        // Crypto Money List
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
-
-
+        createCryptoFragment();
 
     }
 
@@ -91,49 +68,36 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void createCryptoFragment() {
+        android.app.FragmentManager fragmentManager = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        CryptoFragment cryptoFragment = new CryptoFragment();
+        fragmentTransaction.replace(R.id.contentFrame, cryptoFragment);
+        fragmentTransaction.commit();
+    }
+
+    private void createFavoritesFragment() {
+        android.app.FragmentManager fragmentManager = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FavoritesFragment favoritesFragment = new FavoritesFragment();
+        fragmentTransaction.replace(R.id.contentFrame, favoritesFragment);
+        fragmentTransaction.commit();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
-        android.app.FragmentManager fragmentManager = getFragmentManager();
-        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         int id = item.getItemId();
 
-
         if (id == R.id.nav_profile) {
-
-            Intent intent = new Intent(MainActivity.this, ProfileTab.class);
-            finish();
+            Intent intent = new Intent(MainActivity.this, ProfileTabActivity.class);
             startActivity(intent);
-
         } else if (id == R.id.nav_crypto) {
-
-            CryptoFragment cryptoFragment = new CryptoFragment();
-            fragmentTransaction.replace(R.id.contentFrame, cryptoFragment);
-            fragmentTransaction.commit();
-
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            listItems = new ArrayList<>();
-
-            for (int i = 0; i < 10; i++) {
-
-                listItems.add(new CryptoFragment("Bitcoin" + (i + 1)));
-            }
-            // set Adapter
-
-            adapter = new MyAdapter(listItems, this);
-            recyclerView.setAdapter(adapter);
-
-
+            createCryptoFragment();
         } else if (id == R.id.nav_fav) {
-
-            FavoritesFragment favoritesFragment = new FavoritesFragment();
-            fragmentTransaction.replace(R.id.contentFrame, favoritesFragment);
-            fragmentTransaction.commit();
-
+            createFavoritesFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

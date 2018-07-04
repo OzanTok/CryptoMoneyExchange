@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,66 +18,84 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private EditText name, email, password;
-    private Button signIn, signUp;
 
-    //For CryptoFragments
+    //For CryptoFragmentst
 
+    @BindView(R.id.textViewMessage)
+    TextView textViewMessage;
+    @BindView(R.id.etName)
+    EditText editTextName;
+    @BindView(R.id.etEmail)
+    EditText editTextEmail;
+    @BindView(R.id.etPassword)
+    EditText editTextPassword;
+
+    private boolean isRegister = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        ButterKnife.bind(this);
+        onClickLogin();
         mAuth = FirebaseAuth.getInstance();
 
-        name = (EditText) findViewById(R.id.etName);
-        email = (EditText) findViewById(R.id.etEmail);
-        password = (EditText) findViewById(R.id.etPassword);
-        signIn = (Button) findViewById(R.id.btnSignIn);
-        signUp = (Button) findViewById(R.id.btnSignUp);
-
-
-        //Check if users is already logged in
-
         if (mAuth.getCurrentUser() != null) {
-            //User not logged in
-
             finish();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
-
         }
-
-        signIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String getemail = email.getText().toString().trim();
-                String getpassword = password.getText().toString().trim();
-                callsignin(getemail, getpassword);
-            }
-        });
-
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String getemail = email.getText().toString().trim();
-                String getpassword = password.getText().toString().trim();
-                callsignup(getemail, getpassword);
-
-            }
-        });
 
 
     }
 
+    @OnClick(R.id.btnContinue)
+    protected void onClickContinue() {
+        if (isRegister) {
+            String email = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+            if (TextUtils.isEmpty(editTextEmail.getText())
+                    || TextUtils.isEmpty(editTextPassword.getText())
+                    || TextUtils.isEmpty(editTextName.getText())) {
+                Toast.makeText(this, "E-Mail, Password and Username cannot be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                callRegister(email, password);
+            }
+        } else {
+            String email = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+            if (TextUtils.isEmpty(editTextEmail.getText()) || TextUtils.isEmpty(editTextPassword.getText())) {
+                Toast.makeText(this, "E-Mail and Password cannot be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                callLogin(email, password);
+            }
+        }
+
+    }
+
+    @OnClick(R.id.btnLogin)
+    protected void onClickLogin() {
+        editTextName.setVisibility(View.GONE);
+        textViewMessage.setText("Login Screen");
+        isRegister = false;
+    }
+
+    @OnClick(R.id.btnRegister)
+    protected void onClickRegister() {
+        editTextName.setVisibility(View.VISIBLE);
+        textViewMessage.setText("Register Screen");
+        isRegister = true;
+    }
+
     //Create Account
 
-    private void callsignup(String email, String password) {
+    private void callRegister(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -106,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
 
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(name.getText().toString().trim()).build();
+                    .setDisplayName(editTextName.getText().toString().trim()).build();
 
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -124,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //Sign In Process
 
-    private void callsignin(String email, String password) {
+    private void callLogin(String email, String password) {
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -148,7 +167,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-
 
 
 }
